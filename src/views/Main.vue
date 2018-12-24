@@ -38,8 +38,9 @@
 </template>
 
 <script>
-import { AXIOS } from "../services/Api";
 import { mapMutations, mapGetters } from "vuex";
+import { AXIOS } from "../services/Api";
+import Auth from "../services/Auth";
 
 export default {
     name: "Main",
@@ -63,16 +64,12 @@ export default {
         }
     },
     created() {
-        if (!this.access) {
-            this.logout();
-        } else {
-            AXIOS.defaults.headers.common["Authorization"] =
-                "Bearer " + this.access;
-            AXIOS.interceptors.response.use(undefined, error => {
-                if (error.response && error.response.status === 401)
-                    this.logout();
-            });
-        }
+        AXIOS.interceptors.response.use(undefined, error => {
+            if (error.response && error.response.status === 401) {
+                this.logout();
+            }
+        });
+        Auth.details();
     }
 };
 </script>

@@ -1,26 +1,19 @@
 import Auth from "../../services/Auth";
-import { AXIOS } from "../../services/Api";
 
 const state = {
-    user: JSON.parse(localStorage.getItem("user"))
+    token: localStorage.getItem("token")
 };
 
 const getters = {
-    access: state => {
-        if (state.user) {
-            return state.user.access;
-        } else {
-            return "";
-        }
-    }
+    getToken: state => state.token
 };
 
 const actions = {
     signin({ commit }, user) {
         return new Promise((resolve, reject) => {
             Auth.signin(user)
-                .then(data => {
-                    commit("success", data);
+                .then(token => {
+                    commit("success", token);
                     resolve();
                 })
                 .catch(error => reject(error));
@@ -29,16 +22,13 @@ const actions = {
 };
 
 const mutations = {
-    success(state, user) {
-        AXIOS.defaults.headers.common["Authorization"] =
-            "Bearer " + user.access;
-        localStorage.setItem("user", JSON.stringify(user));
-        state.user = user;
+    success(state, token) {
+        localStorage.setItem("token", token);
+        state.token = token;
     },
     logout() {
-        AXIOS.defaults.headers.common["Authorization"] = null;
-        localStorage.removeItem("user");
-        state.user = null;
+        localStorage.removeItem("token");
+        state.token = null;
     }
 };
 

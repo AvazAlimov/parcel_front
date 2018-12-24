@@ -13,15 +13,17 @@
                                         .headline Parcel
                             v-card-text
                                 v-form(v-model="valid" ref="form")
-                                    v-text-field(v-model="user.username" label="Username" :rules="validation")
+                                    v-text-field(v-model="user.username" label="Username" :rules="validation" @keyup.enter="signin")
                                     v-text-field(v-model="user.password" label="Password" 
                                         :type="show_password ? 'text':'password'" 
                                         :rules="validation" 
                                         :append-icon="show_password ? 'visibility_off' : 'visibility'" 
-                                        @click:append="show_password = !show_password")
-                                    v-alert(:value="error" type="error" outline) {{ error }}
+                                        @click:append="show_password = !show_password"
+                                        @keyup.enter="signin"
+                                        )
                                     br
                                     v-btn(:disabled="!valid" :loading="loading" color="primary" @click="signin") Signin
+            v-snackbar(:value="error" type="error" outline) {{ error }}
 </template>
 
 <script>
@@ -43,7 +45,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            access: "auth/access"
+            token: "auth/getToken"
         })
     },
     methods: {
@@ -58,12 +60,12 @@ export default {
                 })
                 .catch(error => {
                     this.error = error;
-                    this.loading = false;
-                });
+                })
+                .finally(() => this.loading = false);
         }
     },
     created() {
-        if (this.access) {
+        if (this.token) {
             this.$router.push("/");
         }
     }

@@ -120,18 +120,21 @@
                         v-flex(xs12).pb-0
                             v-textarea(v-model="note" outline label="Note")
             v-card-actions
+                v-alert(type="error" :value="error") {{ error }}
                 v-spacer
-                v-btn(color="primary" depressed) Accept
+                v-btn(color="primary" depressed @click="accept") Accept
 </template>
 
 <script>
 import Customer from "../services/Customer";
+import Parcel from "../services/Parcel";
 var task = {};
 
 export default {
     name: "Acceptance",
     data() {
         return {
+            error: null,
             sender_query: "",
             receiver_query: "",
             item_query: "",
@@ -183,6 +186,28 @@ export default {
             });
             this.weight = weight;
             this.price = (weight * 7).toFixed(2);
+        },
+        accept() {
+            var totalPrice = 0;
+            this.items.forEach(item => {
+                totalPrice += parseFloat(item.price);
+            });
+
+            Parcel.accept({
+                sender: this.sender.id,
+                receiver: this.receiver.id,
+                category: this.category,
+                weight: this.weight,
+                price: totalPrice.toFixed(2),
+                status: "accepted",
+                note: this.note,
+                service_fee: this.price,
+                items: this.items
+            })
+                .then(parcel => {})
+                .catch(error => {
+                    this.error = error;
+                });
         }
     },
     watch: {
@@ -232,6 +257,9 @@ export default {
         },
         items(value) {
             this.calculateTotal();
+        },
+        weight(value) {
+            this.price = parseFloat(value * 7).toFixed(2);
         }
     }
 };
