@@ -2,40 +2,34 @@
     v-flex(xs12)
         v-card.pa-4
             v-card-title.pb-0
-                v-layout
-                    .headline Registration
-                    v-spacer
-                    v-tooltip(bottom)
-                        v-btn(slot="activator" flat icon @click="clear")
-                            v-icon refresh
-                        span Clear all
+                .headline Registration    
+                    v-checkbox(v-model="is_company" label="Company" hide-details)
             v-card-text
                 v-form(v-model="valid" ref="form")
                     v-container(grid-list-xl).pa-0
                         v-layout(row wrap)
                             v-flex(xs6)
-                                v-text-field(label="First Name" v-model="first_name" :rules="validation")
-                                v-text-field(label="Last Name" v-model="last_name" :rules="validation")
-                                v-text-field(label="Company Name" v-model="company")
+                                v-text-field(label="First Name" v-model="first_name" :rules="validation" v-if="!is_company")
+                                v-text-field(label="Last Name" v-model="last_name" :rules="validation" v-if="!is_company")
+                                v-text-field(label="Company Name" v-model="title" v-if="is_company")
                                 v-text-field(label="Phone Number" v-model="phone" :rules="validation")
-                            v-flex(xs6)
                                 v-text-field(label="Email" type="email" v-model="email" :rules="validation")
+                            v-flex(xs6)
                                 v-autocomplete(label="Country" v-model="country" :items="countries" item-text="name" item-value="name" persistent-hint :rules="validation")
                                 v-layout(row).pa-0
                                     v-flex(xs6).pt-0.pb-0
                                         v-text-field(label="City" v-model="city" :rules="validation")
                                     v-flex(xs6).pt-0.pb-0
-                                        v-text-field(label="Postcode" v-model="postal_code" :rules="validation")
+                                        v-text-field(label="Postcode" v-model="postcode" :rules="validation")
                                 v-text-field(label="Address" v-model="address" :rules="validation")
             v-card-actions
-                v-alert(:value="success" type="success" outline) {{ success }}
-                v-alert(:value="error" type="error" outline) {{ error }}
                 v-spacer
                 v-btn(color="primary" depressed @click="create" :loading="loading" :disabled="!valid") Register
+        v-snackbar(:value="result") {{ result }}
 </template>
 
 <script>
-import Customer from "../services/Customer";
+import Account from "../services/Account";
 import countries from "../assets/countries.json";
 
 export default {
@@ -45,58 +39,55 @@ export default {
             valid: false,
             validation: [v => !!v || "required"],
             loading: false,
-            success: "",
-            error: "",
             countries: countries,
+            result: "",
+            is_company: false,
             first_name: "",
             last_name: "",
-            company: "",
-            email: "",
-            phone: "",
-            postal_code: "",
-            city: "",
+            title: "",
             country: "",
-            address: ""
+            city: "",
+            address: "",
+            postcode: "",
+            phone: "",
+            email: "",
         };
     },
     methods: {
         clear() {
             this.first_name = "";
             this.last_name = "";
-            this.company = "";
+            this.title = "";
             this.email = "";
             this.phone = "";
-            this.postal_code = "";
+            this.postcode = "";
             this.city = "";
             this.country = "";
             this.address = "";
         },
         create() {
             this.loading = true;
-            this.error = "";
-            this.success = "";
-            Customer.create({
+            Account.create({
+                is_company: this.is_company,
                 first_name: this.first_name,
                 last_name: this.last_name,
-                company: this.company,
+                title: this.title,
                 address: this.address,
                 country: this.country,
                 city: this.city,
-                postal_code: this.postal_code,
+                postcode: this.postcode,
                 phone: this.phone,
                 email: this.email
             })
                 .then(response => {
-                    this.success = "Created";
+                    this.result = "Created";
                     this.clear();
                     this.$refs.form.reset();
                 })
                 .catch(error => {
-                    this.error = error;
+                    this.result = error;
                 })
-                .finally(() => {
-                    this.loading = false;
-                });
+                .finally(() => this.loading = false);
         }
     }
 };
