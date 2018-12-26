@@ -6,13 +6,9 @@
                     v-list-tile-action
                         v-icon check_circle
                     v-list-tile-title Acceptance
-                v-list-tile(to="/customers/register")
-                    v-list-tile-action
-                        v-icon account_circle
-                    v-list-tile-title Register
                 v-list-tile(to="/customers/list")
                     v-list-tile-action
-                        v-icon list
+                        v-icon account_circle
                     v-list-tile-title Customers
                 v-list-tile
                     v-list-tile-action

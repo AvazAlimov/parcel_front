@@ -32,11 +32,6 @@ export default new VueRouter({
                     path: "/customers/list",
                     name: "customers/list",
                     component: Customers
-                },
-                {
-                    path: "/customers/register",
-                    name: "customers/register",
-                    component: Register
                 }
             ]
         },

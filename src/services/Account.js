@@ -14,10 +14,13 @@ export default {
         });
     },
 
-    getAll() {
+    getAll(params, task) {
         return new Promise((resolve, reject) => {
+            task.cancel = function() {
+                resolve([]);
+            };
             Api()
-                .get("/accounts")
+                .get("/accounts", params)
                 .then(response => {
                     resolve(response.data);
                 })

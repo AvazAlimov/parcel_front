@@ -32,7 +32,7 @@
                                         .body-1 {{ sender.first_name }} {{ sender.last_name }}
                                         br
                                         .title(v-if="sender.company") Company
-                                        .body-1(v-if="sender.company") {{ sender.company }}
+                                        .body-1(v-if="sender.company") {{ sender.title }}
                                         br(v-if="sender.company")
                                         .title Email
                                         .body-1 {{ sender.email }}
@@ -44,7 +44,7 @@
                                         .body-1 {{ sender.address }} {{ sender.city }} {{ sender.country }}
                                         br
                                         .title Postal Code
-                                        .body-1 {{ sender.postal_code }}
+                                        .body-1 {{ sender.postcode }}
                                     v-spacer
                                     v-tooltip(bottom)
                                         v-btn(slot="activator" flat icon @click="sender=null")
@@ -70,7 +70,7 @@
                                         .body-1 {{ receiver.first_name }} {{ receiver.last_name }}
                                         br
                                         .title(v-if="receiver.company") Company
-                                        .body-1(v-if="receiver.company") {{ receiver.company }}
+                                        .body-1(v-if="receiver.company") {{ receiver.title }}
                                         br(v-if="receiver.company")
                                         .title Email
                                         .body-1 {{ receiver.email }}
@@ -82,7 +82,7 @@
                                         .body-1 {{ receiver.address }} {{ receiver.city }} {{ receiver.country }}
                                         br
                                         .title Postal Code
-                                        .body-1 {{ receiver.postal_code }}
+                                        .body-1 {{ receiver.postcode }}
                                     v-spacer
                                     v-tooltip(bottom)
                                         v-btn(slot="activator" flat icon @click="receiver=null")
@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import Customer from "../services/Customer";
+import Account from "../services/Account";
 import Parcel from "../services/Parcel";
 var task = {};
 
@@ -204,7 +204,7 @@ export default {
                 service_fee: this.price,
                 items: this.items
             })
-                .then(parcel => {})
+                .then(parcel => { })
                 .catch(error => {
                     this.error = error;
                 });
@@ -214,15 +214,15 @@ export default {
         sender_query(value) {
             if (task.cancel) task.cancel();
             if (value) {
-                Customer.get(value, task).then(customers => {
-                    this.senders = customers.results;
+                Account.getAll({ query: value }, task).then(customers => {
+                    this.senders = customers;
                     this.senders.forEach(sender => {
                         sender.combination =
                             sender.first_name +
                             " " +
                             sender.last_name +
                             " " +
-                            sender.company +
+                            sender.title +
                             " " +
                             sender.email +
                             " " +
@@ -236,15 +236,15 @@ export default {
         receiver_query(value) {
             if (task.cancel) task.cancel();
             if (value) {
-                Customer.get(value, task).then(customers => {
-                    this.receivers = customers.results;
+                Account.getAll({ query: value }, task).then(customers => {
+                    this.receivers = customers;
                     this.receivers.forEach(receiver => {
                         receiver.combination =
                             receiver.first_name +
                             " " +
                             receiver.last_name +
                             " " +
-                            receiver.company +
+                            receiver.title +
                             " " +
                             receiver.email +
                             " " +
