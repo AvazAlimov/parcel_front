@@ -4,7 +4,6 @@ import Login from "../views/Login";
 import Main from "../views/Main";
 import Acceptance from "../views/Acceptance";
 import Customers from "../views/Customers";
-import Register from "../views/Register";
 import Show from "../views/Show";
 
 Vue.use(VueRouter);

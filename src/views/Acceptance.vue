@@ -120,9 +120,9 @@
                         v-flex(xs12).pb-0
                             v-textarea(v-model="note" outline label="Note")
             v-card-actions
-                v-alert(type="error" :value="error") {{ error }}
                 v-spacer
                 v-btn(color="primary" depressed @click="accept") Accept
+        v-snackbar(:value="error") {{ error }}
 </template>
 
 <script>
@@ -188,23 +188,27 @@ export default {
             this.price = (weight * 7).toFixed(2);
         },
         accept() {
+            if (!this.sender || !this.receiver) {
+                return;
+            }
+
             var totalPrice = 0;
             this.items.forEach(item => {
                 totalPrice += parseFloat(item.price);
             });
 
-            Parcel.accept({
-                sender: this.sender.id,
-                receiver: this.receiver.id,
+            Parcel.create({
+                sender_id: this.sender.id,
+                receiver_id: this.receiver.id,
                 category: this.category,
                 weight: this.weight,
                 price: totalPrice.toFixed(2),
-                status: "accepted",
+                status: "Accepted",
                 note: this.note,
                 service_fee: this.price,
                 items: this.items
             })
-                .then(parcel => { })
+                .then(parcel => this.$router.push('/show/' + parcel.code))
                 .catch(error => {
                     this.error = error;
                 });
