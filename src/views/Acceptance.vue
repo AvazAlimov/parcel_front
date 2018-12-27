@@ -29,11 +29,11 @@
                                 v-layout(v-if="sender.combination")
                                     v-flex(xs10)
                                         .title Sender
-                                        .body-1 {{ sender.first_name }} {{ sender.last_name }}
+                                        .body-1(v-if="!sender.is_company") {{ sender.first_name }} {{ sender.last_name }}
                                         br
-                                        .title(v-if="sender.company") Company
-                                        .body-1(v-if="sender.company") {{ sender.title }}
-                                        br(v-if="sender.company")
+                                        .title(v-if="sender.is_company") Company
+                                        .body-1(v-if="sender.is_company") {{ sender.title }}
+                                        br(v-if="sender.is_company")
                                         .title Email
                                         .body-1 {{ sender.email }}
                                         br
@@ -67,11 +67,11 @@
                                 v-layout(v-if="receiver.combination")
                                     v-flex(xs10)
                                         .title Receiver
-                                        .body-1 {{ receiver.first_name }} {{ receiver.last_name }}
+                                        .body-1(v-if="!receiver.is_company") {{ receiver.first_name }} {{ receiver.last_name }}
                                         br
-                                        .title(v-if="receiver.company") Company
-                                        .body-1(v-if="receiver.company") {{ receiver.title }}
-                                        br(v-if="receiver.company")
+                                        .title(v-if="receiver.is_company") Company
+                                        .body-1(v-if="receiver.is_company") {{ receiver.title }}
+                                        br(v-if="receiver.is_company")
                                         .title Email
                                         .body-1 {{ receiver.email }}
                                         br

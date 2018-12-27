@@ -35,7 +35,7 @@ export default new VueRouter({
             ]
         },
         {
-            path: "/show/:id",
+            path: "/show/:code",
             name: "show",
             component: Show
         }
