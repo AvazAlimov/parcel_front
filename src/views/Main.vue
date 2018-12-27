@@ -10,7 +10,7 @@
                     v-list-tile-action
                         v-icon account_circle
                     v-list-tile-title Customers
-                v-list-tile
+                v-list-tile(to="/parcels/list")
                     v-list-tile-action
                         v-icon inbox
                     v-list-tile-title Parcels

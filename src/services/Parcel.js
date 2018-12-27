@@ -10,6 +10,15 @@ export default {
         });
     },
 
+    getAll() {
+        return new Promise((resolve, reject) => {
+            Api()
+                .get("/parcels")
+                .then(response => resolve(response.data))
+                .catch(error => reject(error));
+        });
+    },
+
     getByCode(code) {
         return new Promise((resolve, reject) => {
             Api()
